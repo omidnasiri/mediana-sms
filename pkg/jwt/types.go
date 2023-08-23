@@ -18,6 +18,6 @@ type Config struct {
 
 type JwtClaims struct {
 	goJwt.RegisteredClaims
-	UserId   string `json:"user_id"`
+	UserId   uint   `json:"user_id"`
 	UserRole string `json:"user_role"`
 }

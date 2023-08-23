@@ -12,7 +12,7 @@ import (
 )
 
 type JWT interface {
-	CreateAccessToken(userId, userRole string) (Token, error)
+	CreateAccessToken(userId uint, userRole string) (Token, error)
 }
 
 type jwtService struct {
@@ -33,7 +33,7 @@ func NewJwtService() JWT {
 	}
 }
 
-func (jwt *jwtService) CreateAccessToken(userId, userRole string) (Token, error) {
+func (jwt *jwtService) CreateAccessToken(userId uint, userRole string) (Token, error) {
 	now := time.Now()
 	var jwtKey = []byte(jwt.cfg.secret)
 
