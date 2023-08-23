@@ -13,6 +13,9 @@ type authHeader struct {
 	Token string `header:"Authorization"`
 }
 
+// Authentication middleware checks for existence of the jwt token in
+// the right format in request header, validates it and if successful
+// stores user claims in request context
 func Authentication(jwtManager jwt.JWT) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		h := authHeader{}
