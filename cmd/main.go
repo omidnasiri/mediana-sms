@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
+	"github.com/omidnasiri/mediana-sms/api"
 	"github.com/omidnasiri/mediana-sms/pkg/db"
 )
 
@@ -18,5 +19,9 @@ func main() {
 	dbObj := db.Migrate()
 
 	// dependency injection
-	inject(dbObj)
+	handlers := inject(dbObj)
+
+	// start api server
+	r := api.SetupRoutes(handlers)
+	r.Run()
 }
