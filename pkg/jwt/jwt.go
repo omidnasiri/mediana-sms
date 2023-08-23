@@ -1,12 +1,14 @@
 package jwt
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
 	"time"
 
 	goJwt "github.com/golang-jwt/jwt/v4"
+	errs "github.com/omidnasiri/mediana-sms/pkg/err"
 )
 
 type JWT interface {
@@ -51,4 +53,35 @@ func (jwt *jwtService) CreateAccessToken(userId, userRole string) (Token, error)
 	}
 
 	return Token{accessTokenString, accessExpirationTime}, nil
+}
+
+func (jwt *jwtService) ParseJwtToken(tokenString string) (*JwtClaims, error) {
+	claims := &JwtClaims{}
+	token, err := goJwt.ParseWithClaims(tokenString, claims,
+		func(token *goJwt.Token) (any, error) {
+			if _, ok := token.Method.(*goJwt.SigningMethodHMAC); !ok {
+				return nil, errs.ErrUnexpectedSigningMethod
+			}
+			return []byte(jwt.cfg.secret), nil
+		})
+
+	if err != nil {
+		ve, errHasValidationError := err.(*goJwt.ValidationError)
+		if errHasValidationError {
+			for _, goJwtValidationErr := range errs.GoJwtValidationErrors {
+				if ve.Is(goJwtValidationErr) {
+					return nil, goJwtValidationErr
+				}
+			}
+			return nil, ve.Inner
+		} else {
+			return nil, fmt.Errorf("failled to parse token >>> %s", err.Error())
+		}
+	}
+
+	if !token.Valid {
+		return nil, errs.ErrInvalidToken
+	}
+
+	return claims, nil
 }
