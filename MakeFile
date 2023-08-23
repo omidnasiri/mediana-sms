@@ -1,7 +1,7 @@
 run:
 	go run ./cmd/main.go
 
-mod:
+tidy:
 	go mod tidy
 	go mod vendor
 
