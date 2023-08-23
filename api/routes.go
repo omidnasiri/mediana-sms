@@ -16,6 +16,7 @@ type ControllerContainer struct {
 	AuthController    *controller.AuthController
 	SchoolController  *controller.SchoolController
 	TeacherController *controller.TeacherController
+	StudentController *controller.StudentController
 }
 
 func SetupRoutes(controllers *ControllerContainer) *gin.Engine {
@@ -31,9 +32,13 @@ func SetupRoutes(controllers *ControllerContainer) *gin.Engine {
 		{
 			schoolRouter.POST("/", middleware.Authorization([]string{models.ROLE_ADMIN}), controllers.SchoolController.Create)
 		}
-		teacherRouter := apiV1.Group("/school", middleware.Authentication(controllers.JwtManager))
+		teacherRouter := apiV1.Group("/teacher", middleware.Authentication(controllers.JwtManager))
 		{
 			teacherRouter.POST("/", middleware.Authorization([]string{models.ROLE_HEADMASTER}), controllers.TeacherController.Create)
+		}
+		studentRouter := apiV1.Group("/student", middleware.Authentication(controllers.JwtManager))
+		{
+			studentRouter.POST("/", middleware.Authorization([]string{models.ROLE_HEADMASTER}), controllers.SchoolController.Create)
 		}
 	}
 
