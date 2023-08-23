@@ -38,7 +38,8 @@ func SetupRoutes(controllers *ControllerContainer) *gin.Engine {
 		}
 		studentRouter := apiV1.Group("/student", middleware.Authentication(controllers.JwtManager))
 		{
-			studentRouter.POST("/", middleware.Authorization([]string{models.ROLE_HEADMASTER}), controllers.SchoolController.Create)
+			studentRouter.POST("/", middleware.Authorization([]string{models.ROLE_HEADMASTER}), controllers.StudentController.Create)
+			studentRouter.POST("/:teacher_id", middleware.Authorization([]string{models.ROLE_HEADMASTER}), controllers.StudentController.BulkAddStudentToTeacher)
 		}
 	}
 
