@@ -13,13 +13,15 @@ import (
 
 type JWT interface {
 	CreateAccessToken(userId uint, userRole string) (Token, error)
+	ParseJwtToken(tokenString string) (*JwtClaims, error)
 }
 
-type jwtService struct {
+type jwtManager struct {
 	cfg Config
 }
 
-func NewJwtService() JWT {
+// NewJwtManager returns a new JWT manager using JWT config from envs
+func NewJwtManager() JWT {
 	accessTokenTtlInt, err := strconv.Atoi(os.Getenv("JWT_ACCESS_TOKEN_TTL"))
 	if err != nil {
 		log.Fatal(err)
@@ -28,12 +30,13 @@ func NewJwtService() JWT {
 		secret:         os.Getenv("JWT_SECRET"),
 		accessTokenTTL: time.Duration(accessTokenTtlInt),
 	}
-	return &jwtService{
+	return &jwtManager{
 		cfg: cfg,
 	}
 }
 
-func (jwt *jwtService) CreateAccessToken(userId uint, userRole string) (Token, error) {
+// CreateAccessToken generates and signs new access token for a user.
+func (jwt *jwtManager) CreateAccessToken(userId uint, userRole string) (Token, error) {
 	now := time.Now()
 	var jwtKey = []byte(jwt.cfg.secret)
 
@@ -55,7 +58,8 @@ func (jwt *jwtService) CreateAccessToken(userId uint, userRole string) (Token, e
 	return Token{accessTokenString, accessExpirationTime}, nil
 }
 
-func (jwt *jwtService) ParseJwtToken(tokenString string) (*JwtClaims, error) {
+// ParseJwtToken verifies the access token string and return a user claim if the token is valid
+func (jwt *jwtManager) ParseJwtToken(tokenString string) (*JwtClaims, error) {
 	claims := &JwtClaims{}
 	token, err := goJwt.ParseWithClaims(tokenString, claims,
 		func(token *goJwt.Token) (any, error) {

@@ -11,17 +11,19 @@ import (
 
 // Inject handles dependency injection between application layers
 func Inject(db *gorm.DB) *api.ControllerContainer {
+	jwtManager := jwt.NewJwtManager()
+
 	// Repositories
 	userRepository := repository.NewUserRepository(db)
 
 	// Services
-	jwtService := jwt.NewJwtService()
-	authService := service.NewAuthService(userRepository, jwtService)
+	authService := service.NewAuthService(userRepository, jwtManager)
 
 	// Routers
 	authController := controller.NewAuthController(authService)
 
 	return &api.ControllerContainer{
+		JwtManager:     jwtManager,
 		AuthController: authController,
 	}
 }

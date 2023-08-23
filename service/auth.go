@@ -13,13 +13,13 @@ type AuthService interface {
 
 type authService struct {
 	userRepo   repository.UserRepository
-	jwtService jwt.JWT
+	jwtManager jwt.JWT
 }
 
-func NewAuthService(userRepo repository.UserRepository, jwtService jwt.JWT) AuthService {
+func NewAuthService(userRepo repository.UserRepository, jwtManager jwt.JWT) AuthService {
 	return &authService{
 		userRepo,
-		jwtService,
+		jwtManager,
 	}
 }
 
@@ -34,7 +34,7 @@ func (s *authService) Login(email, password string) (jwt.Token, string, error) {
 		return jwt.Token{}, "", err
 	}
 
-	jwtToken, err := s.jwtService.CreateAccessToken(user.ID, user.Role.Title)
+	jwtToken, err := s.jwtManager.CreateAccessToken(user.ID, user.Role.Title)
 	if err != nil {
 		return jwt.Token{}, "", err
 	}
