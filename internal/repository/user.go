@@ -11,6 +11,7 @@ import (
 
 type UserRepository interface {
 	GetByEmail(email string) (*models.User, error)
+	GetById(id uint) (*models.User, error)
 }
 
 type userRepository struct {
@@ -25,7 +26,20 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (r *userRepository) GetByEmail(email string) (*models.User, error) {
 	var user models.User
-	err := r.db.Where("email = ?", email).First(&user).Error
+	err := r.db.Preload("Role").Where("email = ?", email).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.NewNotFoundError("user")
+		}
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *userRepository) GetById(id uint) (*models.User, error) {
+	var user models.User
+	err := r.db.Preload("Role").Where("id = ?", id).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errs.NewNotFoundError("user")

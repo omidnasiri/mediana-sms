@@ -17,14 +17,14 @@ func NewAuthController(authService service.AuthService) *AuthController {
 	}
 }
 
-func (handler *AuthController) Login(ctx *gin.Context) {
+func (c *AuthController) Login(ctx *gin.Context) {
 	var req presenter.LoginRequestDTO
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		presenter.Failure(ctx, errs.NewValidationError(err.Error()))
 		return
 	}
 
-	token, role, err := handler.authService.Login(req.Email, req.Password)
+	token, role, err := c.authService.Login(req.Email, req.Password)
 	if err != nil {
 		presenter.Failure(ctx, err)
 		return

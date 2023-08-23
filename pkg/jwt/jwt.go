@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -70,17 +69,7 @@ func (jwt *jwtManager) ParseJwtToken(tokenString string) (*JwtClaims, error) {
 		})
 
 	if err != nil {
-		ve, errHasValidationError := err.(*goJwt.ValidationError)
-		if errHasValidationError {
-			for _, goJwtValidationErr := range errs.GoJwtValidationErrors {
-				if ve.Is(goJwtValidationErr) {
-					return nil, goJwtValidationErr
-				}
-			}
-			return nil, ve.Inner
-		} else {
-			return nil, fmt.Errorf("failled to parse token >>> %s", err.Error())
-		}
+		return nil, err
 	}
 
 	if !token.Valid {

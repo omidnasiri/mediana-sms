@@ -39,7 +39,8 @@ func Authentication(jwtManager jwt.JWT) gin.HandlerFunc {
 			return
 		}
 
-		ctx.Set("userClaims", userClaims)
+		ctx.Set("userId", userClaims)
+		ctx.Set("userRole", userClaims.UserRole)
 
 		ctx.Next()
 	}

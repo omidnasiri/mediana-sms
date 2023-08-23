@@ -4,8 +4,9 @@ import "gorm.io/gorm"
 
 type School struct {
 	gorm.Model
-	Title    string
-	Admin    *User
-	Teachers []*Teacher
-	Student  []*Student
+	Title        string `json:"title"`
+	HeadmasterId uint   `json:"headmaster_id"`
+	Headmaster   *User
+	Teachers     []*Teacher
+	Students     []*Student
 }

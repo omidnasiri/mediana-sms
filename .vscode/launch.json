@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "mediana-sms",
+      "type": "go",
+      "request": "launch",
+      "program": "${workspaceFolder}/cmd",
+      "cwd": "${workspaceFolder}",
+    }
+  ]
+}
