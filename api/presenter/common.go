@@ -16,13 +16,13 @@ func Success(ctx *gin.Context, data any) {
 func newGenericResponse(data any, err string, result bool) GenericResponse {
 	return GenericResponse{
 		Data:   data,
-		Errors: err,
+		Error:  err,
 		Result: result,
 	}
 }
 
 type GenericResponse struct {
 	Data   any    `json:"data,omitempty"`
-	Errors string `json:"errors,omitempty"`
+	Error  string `json:"error,omitempty"`
 	Result bool   `json:"result"`
 }
