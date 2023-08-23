@@ -1,4 +1,4 @@
-package handler
+package controller
 
 import (
 	"github.com/gin-gonic/gin"
@@ -7,17 +7,17 @@ import (
 	"github.com/omidnasiri/mediana-sms/service"
 )
 
-type AuthHandler struct {
+type AuthController struct {
 	authService service.AuthService
 }
 
-func NewAuthHandler(authService service.AuthService) *AuthHandler {
-	return &AuthHandler{
+func NewAuthController(authService service.AuthService) *AuthController {
+	return &AuthController{
 		authService,
 	}
 }
 
-func (handler *AuthHandler) Login(ctx *gin.Context) {
+func (handler *AuthController) Login(ctx *gin.Context) {
 	var req presenter.LoginRequestDTO
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		presenter.Failure(ctx, errs.NewValidationError(err.Error()))

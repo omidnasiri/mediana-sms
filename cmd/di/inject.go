@@ -2,7 +2,7 @@ package di
 
 import (
 	"github.com/omidnasiri/mediana-sms/api"
-	"github.com/omidnasiri/mediana-sms/api/handler"
+	"github.com/omidnasiri/mediana-sms/api/controller"
 	"github.com/omidnasiri/mediana-sms/internal/repository"
 	"github.com/omidnasiri/mediana-sms/pkg/jwt"
 	"github.com/omidnasiri/mediana-sms/service"
@@ -10,7 +10,7 @@ import (
 )
 
 // Inject handles dependency injection between application layers
-func Inject(db *gorm.DB) *api.HandlerContainer {
+func Inject(db *gorm.DB) *api.ControllerContainer {
 	// Repositories
 	userRepository := repository.NewUserRepository(db)
 
@@ -19,9 +19,9 @@ func Inject(db *gorm.DB) *api.HandlerContainer {
 	authService := service.NewAuthService(userRepository, jwtService)
 
 	// Routers
-	authHandler := handler.NewAuthHandler(authService)
+	authController := controller.NewAuthController(authService)
 
-	return &api.HandlerContainer{
-		AuthHandler: authHandler,
+	return &api.ControllerContainer{
+		AuthController: authController,
 	}
 }

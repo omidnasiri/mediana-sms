@@ -20,9 +20,9 @@ func main() {
 	dbObj := db.Migrate()
 
 	// dependency injection
-	handlers := di.Inject(dbObj)
+	controllers := di.Inject(dbObj)
 
 	// start api server
-	r := api.SetupRoutes(handlers)
+	r := api.SetupRoutes(controllers)
 	r.Run()
 }

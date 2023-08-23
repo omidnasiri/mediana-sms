@@ -2,23 +2,23 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/omidnasiri/mediana-sms/api/handler"
+	"github.com/omidnasiri/mediana-sms/api/controller"
 )
 
 const basePath string = "api/v1"
 
-type HandlerContainer struct {
-	AuthHandler *handler.AuthHandler
+type ControllerContainer struct {
+	AuthController *controller.AuthController
 }
 
-func SetupRoutes(handlers *HandlerContainer) *gin.Engine {
+func SetupRoutes(controllers *ControllerContainer) *gin.Engine {
 	app := gin.Default()
 
 	apiV1 := app.Group(basePath)
 	{
 		authRouter := apiV1.Group("/auth")
 		{
-			authRouter.POST("/login", handlers.AuthHandler.Login)
+			authRouter.POST("/login", controllers.AuthController.Login)
 		}
 	}
 
