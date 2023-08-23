@@ -13,8 +13,9 @@ const basePath string = "api/v1"
 type ControllerContainer struct {
 	JwtManager jwt.JWT
 
-	AuthController   *controller.AuthController
-	SchoolController *controller.SchoolController
+	AuthController    *controller.AuthController
+	SchoolController  *controller.SchoolController
+	TeacherController *controller.TeacherController
 }
 
 func SetupRoutes(controllers *ControllerContainer) *gin.Engine {
@@ -29,6 +30,10 @@ func SetupRoutes(controllers *ControllerContainer) *gin.Engine {
 		schoolRouter := apiV1.Group("/school", middleware.Authentication(controllers.JwtManager))
 		{
 			schoolRouter.POST("/", middleware.Authorization([]string{models.ROLE_ADMIN}), controllers.SchoolController.Create)
+		}
+		teacherRouter := apiV1.Group("/school", middleware.Authentication(controllers.JwtManager))
+		{
+			teacherRouter.POST("/", middleware.Authorization([]string{models.ROLE_HEADMASTER}), controllers.TeacherController.Create)
 		}
 	}
 

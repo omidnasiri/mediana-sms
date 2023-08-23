@@ -16,18 +16,22 @@ func Inject(db *gorm.DB) *api.ControllerContainer {
 	// Repositories
 	userRepository := repository.NewUserRepository(db)
 	schoolRepository := repository.NewSchoolRepository(db)
+	teacherRepository := repository.NewTeacherRepository(db)
 
 	// Services
 	authService := service.NewAuthService(userRepository, jwtManager)
 	schoolService := service.NewSchoolService(schoolRepository, userRepository)
+	teacherService := service.NewTeacherService(teacherRepository, schoolRepository, userRepository)
 
 	// Routers
 	authController := controller.NewAuthController(authService)
 	schoolController := controller.NewSchoolController(schoolService)
+	teacherController := controller.NewTeacherController(teacherService)
 
 	return &api.ControllerContainer{
-		JwtManager:       jwtManager,
-		AuthController:   authController,
-		SchoolController: schoolController,
+		JwtManager:        jwtManager,
+		AuthController:    authController,
+		SchoolController:  schoolController,
+		TeacherController: teacherController,
 	}
 }
