@@ -26,7 +26,7 @@ func Authentication(jwtManager jwt.JWT) gin.HandlerFunc {
 		tokenHeader := strings.Split(h.Token, "Bearer ")
 
 		if len(tokenHeader) < 2 {
-			presenter.Failure(ctx, errs.NewUnauthorizedError("must authorization header must be in `Bearer {token}` format"))
+			presenter.Failure(ctx, errs.NewUnauthorizedError("authorization header must be in `Bearer {token}` format"))
 			return
 		}
 

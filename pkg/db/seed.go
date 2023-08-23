@@ -49,5 +49,14 @@ func SeedAll() []Seed {
 				return nil
 			},
 		},
+		{
+			Name: "CreateAdmin",
+			Run: func(db *gorm.DB) error {
+				if db.Table("users").Where("email = ?", "hr@mediana.ir").First(&models.User{}).RowsAffected == 0 {
+					return db.Create(&models.User{Name: "Mitra Hesami", Email: "hr@mediana.ir", PasswordHash: "$2a$04$gSwImOq4tHmLq410O4uv/.0j0ZEa571SA.mffMRmpPzFhICnlGWsq", RoleId: 1}).Error
+				}
+				return nil
+			},
+		},
 	}
 }
