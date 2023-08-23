@@ -1,0 +1,6 @@
+run:
+	go run ./cmd/main.go
+
+mod:
+	go mod tidy
+	go mod vendor
