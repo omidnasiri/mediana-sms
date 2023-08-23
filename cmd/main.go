@@ -1,11 +1,22 @@
 package main
 
-import "github.com/joho/godotenv"
+import (
+	"log"
+
+	"github.com/joho/godotenv"
+	"github.com/omidnasiri/mediana-sms/pkg/db"
+)
 
 func main() {
 	// load environment variables
 	err := godotenv.Load()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
+
+	// database connection
+	dbObj := db.Migrate()
+
+	// dependency injection
+	inject(dbObj)
 }

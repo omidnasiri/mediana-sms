@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/omidnasiri/mediana-sms/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -24,7 +25,13 @@ func Migrate() *gorm.DB {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate()
+	db.AutoMigrate(&models.Role{}, &models.User{}, &models.Teacher{}, &models.Student{}, &models.School{})
+
+	for _, seed := range SeedAll() {
+		if err := seed.Run(db); err != nil {
+			log.Fatal(err)
+		}
+	}
 
 	return db
 }
