@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"strconv"
-
 	"github.com/gin-gonic/gin"
 	"github.com/omidnasiri/mediana-sms/api/presenter"
 	errs "github.com/omidnasiri/mediana-sms/pkg/err"
@@ -36,14 +34,12 @@ func (c *TeacherController) Create(ctx *gin.Context) {
 }
 
 func (c *TeacherController) GetStudents(ctx *gin.Context) {
-	teacherId := ctx.Param("teacher_id")
-	teacherIdInt, err := strconv.Atoi(teacherId)
-	if err != nil {
-		presenter.Failure(ctx, errs.NewValidationError(err.Error()))
-		return
+	teacherUserId, ok := ctx.Get("userId")
+	if !ok {
+		presenter.Failure(ctx, errs.NewForbiddenError(""))
 	}
 
-	students, err := c.teacherService.GetStudents(uint(teacherIdInt))
+	students, err := c.teacherService.GetStudents(teacherUserId.(uint))
 	if err != nil {
 		presenter.Failure(ctx, err)
 		return

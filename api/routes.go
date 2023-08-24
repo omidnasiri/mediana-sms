@@ -36,7 +36,7 @@ func SetupRoutes(controllers *ControllerContainer) *gin.Engine {
 		teacherRouter := apiV1.Group("/teacher", middleware.Authentication(controllers.JwtManager))
 		{
 			teacherRouter.POST("/", middleware.Authorization([]string{models.ROLE_HEADMASTER}), controllers.TeacherController.Create)
-			teacherRouter.GET("/students/:teacher_id", middleware.Authorization([]string{models.ROLE_TEACHER}), controllers.TeacherController.GetStudents)
+			teacherRouter.GET("/students", middleware.Authorization([]string{models.ROLE_TEACHER}), controllers.TeacherController.GetStudents)
 		}
 		studentRouter := apiV1.Group("/student", middleware.Authentication(controllers.JwtManager))
 		{

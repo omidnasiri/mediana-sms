@@ -28,7 +28,7 @@ func (r *studentRepository) Create(model *models.Student) error {
 
 func (r *studentRepository) GetListByIDsExcludeTeacherID(ids []uint, teacherId uint) ([]*models.Student, error) {
 	models := make([]*models.Student, 0, len(ids)+1)
-	err := r.db.Raw("select * from students where id in ? and id not in (select id from students join teacher_students ts on students.id = ts.student_id where ts.teacher_id = ?)", ids, teacherId).Find(&models).Error
+	err := r.db.Raw("select * from students where id in ? and id not in (select id from students join teacher_student ts on students.id = ts.student_id where ts.teacher_id = ?)", ids, teacherId).Find(&models).Error
 	if err != nil {
 		return nil, err
 	}

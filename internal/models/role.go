@@ -14,5 +14,5 @@ const (
 type Role struct {
 	gorm.Model
 	Title RoleType `json:"title"`
-	Users []*User
+	Users []*User  `json:"users,omitempty"`
 }

@@ -8,7 +8,7 @@ import (
 
 type TeacherService interface {
 	Create(name, email, password string, schoolId uint) (*models.Teacher, error)
-	GetStudents(id uint) ([]*models.Student, error)
+	GetStudents(teacherUserId uint) ([]*models.Student, error)
 }
 
 type teacherService struct {
@@ -26,7 +26,7 @@ func NewTeacherService(teacherRepo repository.TeacherRepository, schoolRepo repo
 }
 
 func (s *teacherService) Create(name, email, password string, schoolId uint) (*models.Teacher, error) {
-	school, err := s.schoolRepo.GetById(schoolId)
+	_, err := s.schoolRepo.GetById(schoolId)
 	if err != nil {
 		return nil, err
 	}
@@ -36,19 +36,15 @@ func (s *teacherService) Create(name, email, password string, schoolId uint) (*m
 		return nil, err
 	}
 
-	user := &models.User{Name: name, Email: email, PasswordHash: passwordHash, SchoolId: schoolId}
+	role := &models.Role{Title: models.ROLE_TEACHER}
+	user := &models.User{Name: name, Email: email, PasswordHash: passwordHash, SchoolId: &schoolId, Role: role}
 	err = s.userRepo.Create(user)
 	if err != nil {
 		return nil, err
 	}
 
-	teacher := &models.Teacher{UserId: user.ID}
+	teacher := &models.Teacher{User: user}
 	err = s.teacherRepo.Create(teacher)
-	if err != nil {
-		return nil, err
-	}
-
-	err = s.schoolRepo.Create(school)
 	if err != nil {
 		return nil, err
 	}
@@ -56,8 +52,8 @@ func (s *teacherService) Create(name, email, password string, schoolId uint) (*m
 	return teacher, nil
 }
 
-func (s *teacherService) GetStudents(id uint) ([]*models.Student, error) {
-	students, err := s.teacherRepo.GetStudentsById(id)
+func (s *teacherService) GetStudents(teacherUserId uint) ([]*models.Student, error) {
+	students, err := s.teacherRepo.GetStudentsByTeacherUserId(teacherUserId)
 	if err != nil {
 		return nil, err
 	}

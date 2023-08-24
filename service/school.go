@@ -30,6 +30,9 @@ func (s *schoolService) Create(title string, headmasterId uint) (*models.School,
 	if user.Role.Title != models.ROLE_HEADMASTER {
 		return nil, errs.NewForbiddenError("provided user_id is doesn't is not a headmaster")
 	}
+	if user.SchoolId != nil {
+		return nil, errs.NewForbiddenError("provided headmaster is already involved with another school")
+	}
 
 	school := &models.School{Title: title, HeadmasterId: headmasterId}
 

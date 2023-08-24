@@ -7,6 +7,7 @@ import (
 
 func Failure(ctx *gin.Context, err error) {
 	ctx.JSON(errs.GetHttpStatusCodeFromError(err), newGenericResponse(nil, err.Error(), false))
+	ctx.Abort()
 }
 
 func Success(ctx *gin.Context, data any) {

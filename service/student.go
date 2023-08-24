@@ -29,7 +29,7 @@ func NewStudentService(studentRepo repository.StudentRepository, teacherRepo rep
 }
 
 func (s *studentService) Create(name, email, password string, schoolId uint) (*models.Student, error) {
-	school, err := s.schoolRepo.GetById(schoolId)
+	_, err := s.schoolRepo.GetById(schoolId)
 	if err != nil {
 		return nil, err
 	}
@@ -39,19 +39,15 @@ func (s *studentService) Create(name, email, password string, schoolId uint) (*m
 		return nil, err
 	}
 
-	user := &models.User{Name: name, Email: email, PasswordHash: passwordHash, SchoolId: schoolId}
+	role := &models.Role{Title: models.ROLE_STUDENT}
+	user := &models.User{Name: name, Email: email, PasswordHash: passwordHash, SchoolId: &schoolId, Role: role}
 	err = s.userRepo.Create(user)
 	if err != nil {
 		return nil, err
 	}
 
-	student := &models.Student{UserId: user.ID}
+	student := &models.Student{User: user}
 	err = s.studentRepo.Create(student)
-	if err != nil {
-		return nil, err
-	}
-
-	err = s.schoolRepo.Create(school)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +66,7 @@ func (s *studentService) BulkAddToTeacher(studentIds []uint, teacherId uint) ([]
 		return nil, err
 	}
 	if len(models) < 1 {
-		err := errs.NewNotFoundError("no entities with the provided ids and seo_id needed to be affected")
+		err := errs.NewNotFoundError("no entities with the provided student ids and teacher id needed to be affected")
 		return nil, err
 	}
 
