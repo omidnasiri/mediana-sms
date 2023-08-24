@@ -7,6 +7,7 @@ import (
 
 type TeacherService interface {
 	Create(name string, schoolId uint) (*models.Teacher, error)
+	GetStudents(id uint) ([]*models.Student, error)
 }
 
 type teacherService struct {
@@ -47,4 +48,12 @@ func (s *teacherService) Create(name string, schoolId uint) (*models.Teacher, er
 	}
 
 	return teacher, nil
+}
+
+func (s *teacherService) GetStudents(id uint) ([]*models.Student, error) {
+	students, err := s.teacherRepo.GetStudentsById(id)
+	if err != nil {
+		return nil, err
+	}
+	return students, nil
 }

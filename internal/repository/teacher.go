@@ -12,6 +12,7 @@ import (
 type TeacherRepository interface {
 	Create(*models.Teacher) error
 	GetById(id uint) (*models.Teacher, error)
+	GetStudentsById(id uint) ([]*models.Student, error)
 }
 
 type teacherRepository struct {
@@ -39,4 +40,17 @@ func (r *teacherRepository) GetById(id uint) (*models.Teacher, error) {
 	}
 
 	return &teacher, nil
+}
+
+func (r *teacherRepository) GetStudentsById(id uint) ([]*models.Student, error) {
+	var teacher models.Teacher
+	err := r.db.Preload("Students").Where("id = ?", id).First(&teacher).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.NewNotFoundError("teacher")
+		}
+		return nil, err
+	}
+
+	return teacher.Students, nil
 }
