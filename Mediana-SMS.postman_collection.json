@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "3f3d2ea6-5ff7-4cda-8363-62e139c2109c",
+		"name": "Mediana-SMS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23933248"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"hr@mediana.ir\",\n    \"password\": \"Rv22y1Bu4u8f\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/auth/login",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "School",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"dummy scholl\",\n    \"headmaster_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/school",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"school"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Teacher",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{headmaster-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"dummy teacher\",\n    \"email\": \"teacher@dummy.com\",\n    \"password\": \"12345\",\n    \"school_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/teacher",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"teacher"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Students",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{teacher-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/teacher/students",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"teacher",
+								"students"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{headmaster-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"dummy student\",\n    \"email\": \"student@dummy.com\",\n    \"password\": \"12345\",\n    \"school_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/student",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Add Student To Teacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{headmaster-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"student_ids\": [1, 2, 3, 4]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base-url}}/student/:teacher_id",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"student",
+								":teacher_id"
+							],
+							"variable": [
+								{
+									"key": "teacher_id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base-url",
+			"value": "http://127.0.0.1:9000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "admin-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTI5MTY5NjAsImlhdCI6MTY5MjgzMDU2MCwidXNlcl9pZCI6MSwidXNlcl9yb2xlIjoiYWRtaW4ifQ.R4QbVDwBaoiyjbTjGZAqPXb9vlsB7UKiIt_Cl0c-4WQ",
+			"type": "string"
+		},
+		{
+			"key": "headmaster-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTI5MjUwNTEsImlhdCI6MTY5MjgzODY1MSwidXNlcl9pZCI6MiwidXNlcl9yb2xlIjoiaGVhZG1hc3RlciJ9.YF0ies-6sjUmHa6Qyr6CmkbtWZ-isjElpvyApcRKlR0",
+			"type": "string"
+		},
+		{
+			"key": "teacher-token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTI5MjU5NTksImlhdCI6MTY5MjgzOTU1OSwidXNlcl9pZCI6OCwidXNlcl9yb2xlIjoidGVhY2hlciJ9.vY-mdtfLLQrgyCUqWk33yjM-pB1lEcdCoTWCPyyTexk",
+			"type": "string"
+		}
+	]
+}
