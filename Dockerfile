@@ -7,6 +7,7 @@ RUN go mod vendor
 RUN CGO_ENABLED=0 go build -ldflags "-s -w" -o /app/bin/mediana-sms /app/cmd/
 
 FROM alpine:3.16 as run
+# TODO: Add envs for other that dev environments
 COPY --from=build /app/bin/mediana-sms /bin/mediana-sms
 
 EXPOSE 8080

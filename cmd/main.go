@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	// TODO: Setup app environments and load only in dev environment
 	// load environment variables
 	err := godotenv.Load()
 	if err != nil {

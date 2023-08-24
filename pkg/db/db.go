@@ -10,6 +10,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO: Move dbcon into an interface to separate driver implementations
+
 // Migrate opens the postgres database connection
 // and migrates the database schema
 func Migrate() *gorm.DB {
