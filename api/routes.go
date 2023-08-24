@@ -28,6 +28,7 @@ func SetupRoutes(controllers *ControllerContainer) *gin.Engine {
 		{
 			authRouter.POST("/login", controllers.AuthController.Login)
 		}
+		// TODO: implement admin create headmaster api
 		schoolRouter := apiV1.Group("/school", middleware.Authentication(controllers.JwtManager))
 		{
 			schoolRouter.POST("/", middleware.Authorization([]string{models.ROLE_ADMIN}), controllers.SchoolController.Create)

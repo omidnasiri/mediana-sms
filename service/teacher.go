@@ -3,10 +3,11 @@ package service
 import (
 	"github.com/omidnasiri/mediana-sms/internal/models"
 	"github.com/omidnasiri/mediana-sms/internal/repository"
+	"github.com/omidnasiri/mediana-sms/pkg/utils"
 )
 
 type TeacherService interface {
-	Create(name string, schoolId uint) (*models.Teacher, error)
+	Create(name, email, password string, schoolId uint) (*models.Teacher, error)
 	GetStudents(id uint) ([]*models.Student, error)
 }
 
@@ -24,13 +25,18 @@ func NewTeacherService(teacherRepo repository.TeacherRepository, schoolRepo repo
 	}
 }
 
-func (s *teacherService) Create(name string, schoolId uint) (*models.Teacher, error) {
+func (s *teacherService) Create(name, email, password string, schoolId uint) (*models.Teacher, error) {
 	school, err := s.schoolRepo.GetById(schoolId)
 	if err != nil {
 		return nil, err
 	}
 
-	user := &models.User{Name: name}
+	passwordHash, err := utils.HashPassword([]byte(password))
+	if err != nil {
+		return nil, err
+	}
+
+	user := &models.User{Name: name, Email: email, PasswordHash: passwordHash, SchoolId: schoolId}
 	err = s.userRepo.Create(user)
 	if err != nil {
 		return nil, err

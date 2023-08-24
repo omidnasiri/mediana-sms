@@ -26,7 +26,7 @@ func (c *TeacherController) Create(ctx *gin.Context) {
 		return
 	}
 
-	teacher, err := c.teacherService.Create(req.Name, req.SchoolId)
+	teacher, err := c.teacherService.Create(req.Name, req.Email, req.Password, req.SchoolId)
 	if err != nil {
 		presenter.Failure(ctx, err)
 		return

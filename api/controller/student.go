@@ -26,7 +26,7 @@ func (c *StudentController) Create(ctx *gin.Context) {
 		return
 	}
 
-	student, err := c.studentService.Create(req.Name, req.SchoolId)
+	student, err := c.studentService.Create(req.Name, req.Email, req.Password, req.SchoolId)
 	if err != nil {
 		presenter.Failure(ctx, err)
 		return

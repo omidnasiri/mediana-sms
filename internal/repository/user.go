@@ -26,7 +26,14 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 }
 
 func (r *userRepository) Create(model *models.User) error {
-	return r.db.Create(model).Error
+	err := r.db.Create(model).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errs.NewDuplicateEntity("user")
+		}
+		return err
+	}
+	return nil
 }
 
 func (r *userRepository) GetByEmail(email string) (*models.User, error) {

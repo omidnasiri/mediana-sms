@@ -13,6 +13,6 @@ const (
 
 type Role struct {
 	gorm.Model
-	Title RoleType
+	Title RoleType `json:"title"`
 	Users []*User
 }

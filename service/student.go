@@ -4,10 +4,11 @@ import (
 	"github.com/omidnasiri/mediana-sms/internal/models"
 	"github.com/omidnasiri/mediana-sms/internal/repository"
 	errs "github.com/omidnasiri/mediana-sms/pkg/err"
+	"github.com/omidnasiri/mediana-sms/pkg/utils"
 )
 
 type StudentService interface {
-	Create(name string, schoolId uint) (*models.Student, error)
+	Create(name, email, password string, schoolId uint) (*models.Student, error)
 	BulkAddToTeacher(studentIds []uint, teacherId uint) ([]*models.Student, error)
 }
 
@@ -27,13 +28,18 @@ func NewStudentService(studentRepo repository.StudentRepository, teacherRepo rep
 	}
 }
 
-func (s *studentService) Create(name string, schoolId uint) (*models.Student, error) {
+func (s *studentService) Create(name, email, password string, schoolId uint) (*models.Student, error) {
 	school, err := s.schoolRepo.GetById(schoolId)
 	if err != nil {
 		return nil, err
 	}
 
-	user := &models.User{Name: name}
+	passwordHash, err := utils.HashPassword([]byte(password))
+	if err != nil {
+		return nil, err
+	}
+
+	user := &models.User{Name: name, Email: email, PasswordHash: passwordHash, SchoolId: schoolId}
 	err = s.userRepo.Create(user)
 	if err != nil {
 		return nil, err
